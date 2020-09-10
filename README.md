@@ -20,16 +20,23 @@ Open Source Connector for Cargo Signal Business Intelligence
     <li>Java 8</li>
     <li>Microsoft Azure Account</li>
     <li>Microsoft Power BI</li>
-  <ul>
+  </ul>
 
 <h2><a href="#id3">3&nbsp;&nbsp;&nbsp;How Does It Work</a></h2>
   <p>INSERT DIAGRAM HERE</p>
 
 <h2><a href="#id4">4&nbsp;&nbsp;&nbsp;Usage</a></h2>
   <p>The Data Connector exposes two HTTP endpoints along with a scheduled timer:</p>
-  <ul>
-    <li></li>
-  </ul>
+  <p>Health</p>
+  <p>The health endpoint is an HTTP endpoint that simply returns a 200 response and the text "Ok" when it is hit.  The endpoint is simply used to validate that the Azure Functions are deployed and running.</p>
+```http
+GET https://dev-app.cargosignal.com/health
+```
+  <p>Shipments</p>
+  <p>The shipments endpoint is an HTTP endpoint that will retrieve shipments, telemetry data for the shipments and alert data for the shipments.</p>
+```http
+GET https://dev-app.cargosignal.com/shipments
+```
 
 <h2><a href="#id5">5&nbsp;&nbsp;&nbsp;IDE Setup</a></h2>
   <p>While any code editor will work, Visual Studio Code and IntelliJ offer additional built-in Azure and Java functionality that you will likely find helpful.</p>
@@ -51,6 +58,10 @@ Open Source Connector for Cargo Signal Business Intelligence
 <ul>
   <li>YULGENE TO ADD HERE</li>
 </ul>
+<h4>General Tips</h4>
+<ul>
+  <li>In local.settings.json, the AzureWebJobStorage field can be set "UseDevelopmentStorage=true" on Windows if you have the Azure Emulator running; otherwise don't set it to this or the timer trigger will get a Connection Refused error.</li>
+</ul>
 
 
 ## Usage
@@ -68,5 +79,8 @@ GET https://dev-app.cargosignal.com/connector/shipments?minDate=2020-08-27T00:00
 
 ## FAQ's
 
-* If you have any questions or corrections, please open an issue and we'll get it merged ASAP
-* For any other questions or concerns, just shoot me an email
+* How do I obtain a client key?
+* I am looking for data not returned by the APIs, how can I get it added?
+* If you have any questions or corrections, please contact ????????
+
+&copy; 2020 Cargo Signal
