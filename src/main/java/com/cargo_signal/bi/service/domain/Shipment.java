@@ -10,7 +10,7 @@ public class Shipment {
   private String shipmentNumber;
   private String referenceNumber;
   private String customer;
-//  private List<String> serviceProvider; // FIXME looks wrong in payload, array with one null
+  private List<String> serviceProvider;
   private String status;
   private String scheduledPickupTime;
   private Location pickupLocation;
@@ -31,6 +31,10 @@ public class Shipment {
 
   public String getCustomer() {
     return customer;
+  }
+
+  public List<String> getServiceProvider() {
+    return serviceProvider;
   }
 
   public String getStatus() {
@@ -81,6 +85,7 @@ public class Shipment {
         .append(shipmentNumber, shipment.shipmentNumber)
         .append(referenceNumber, shipment.referenceNumber)
         .append(customer, shipment.customer)
+        .append(serviceProvider, shipment.serviceProvider)
         .append(status, shipment.status)
         .append(scheduledPickupTime, shipment.scheduledPickupTime)
         .append(pickupLocation, shipment.pickupLocation)
@@ -99,6 +104,7 @@ public class Shipment {
         .append(shipmentNumber)
         .append(referenceNumber)
         .append(customer)
+        .append(serviceProvider)
         .append(status)
         .append(scheduledPickupTime)
         .append(pickupLocation)
