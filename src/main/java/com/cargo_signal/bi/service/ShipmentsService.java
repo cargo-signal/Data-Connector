@@ -154,8 +154,6 @@ public class ShipmentsService {
       if (response.getStatusLine().getStatusCode() == 200) {
         String result = IOUtils.toString((response.getEntity().getContent()), StandardCharsets.UTF_8);
         return result;
-      } else if (response.getStatusLine().getStatusCode() == 404) {
-        return "[]"; // FIXME endpoint should return empty list instead of 404
       } else {
         throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
       }
