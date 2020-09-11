@@ -10,8 +10,7 @@ import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 import com.microsoft.azure.functions.annotation.TimerTrigger;
 
-import com.cargo_signal.bi.service.Shipments;
-import com.cargo_signal.blobstorage.BlobStorageManager;
+import com.cargo_signal.bi.service.ShipmentsService;
 
 import java.util.Optional;
 
@@ -51,17 +50,16 @@ public class Connector {
         context.getLogger().info("Cargo Signal BI 'shipments' processed a request.");
 
         // Parse query parameter
-        final String query = request.getQueryParameters().get("minDate");
-        final String minDate = request.getBody().orElse(query);
+        final String minDate = request.getQueryParameters().get("minDate");
 
         if (minDate == null) {
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("'minDate' parameter required in the query string or in the request body").build();
-        } 
+        }
 
         try 
         {
-            Shipments shipments = new Shipments(context);
-            String containerName = shipments.uploadShipments(minDate);
+            ShipmentsService shipmentsService = new ShipmentsService(context);
+            String containerName = shipmentsService.uploadShipments(minDate);
             return request.createResponseBuilder(HttpStatus.OK).body(String.format("Uploaded shipment data to blob storage container %s", containerName)).build();
         } catch (Exception ex) {
             return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload shipment data.  Exception: " + ex).build();
