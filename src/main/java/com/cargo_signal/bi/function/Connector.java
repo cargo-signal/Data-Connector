@@ -12,6 +12,9 @@ import com.microsoft.azure.functions.annotation.TimerTrigger;
 
 import com.cargo_signal.bi.service.ShipmentsService;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -44,7 +47,7 @@ public class Connector {
             @HttpTrigger(
                 name = "shipments",
                 methods = {HttpMethod.GET},
-                authLevel = AuthorizationLevel.ANONYMOUS) // TODO: Once we have bearer token, change to AuthorizationLevel.FUNCTION
+                authLevel = AuthorizationLevel.ANONYMOUS)
                 HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
         context.getLogger().info("Cargo Signal BI 'shipments' processed a request.");
@@ -56,8 +59,7 @@ public class Connector {
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("'minDate' parameter required in the query string or in the request body").build();
         }
 
-        try 
-        {
+        try {
             ShipmentsService shipmentsService = new ShipmentsService(context);
             String containerName = shipmentsService.uploadShipments(minDate);
             return request.createResponseBuilder(HttpStatus.OK).body(String.format("Uploaded shipment data to blob storage container %s", containerName)).build();
@@ -70,7 +72,7 @@ public class Connector {
     public void getShipmentsTimer(
             @TimerTrigger(
             name = "shipmentsTimer",
-            schedule = "*/15 * * * * *")  // Modify this CRON expression to set the schedule
+            schedule = "0 0 * * *")  // Modify this CRON expression to set the schedule
             String timerInfo,
             final ExecutionContext context) {
 
@@ -78,17 +80,20 @@ public class Connector {
 
         context.getLogger().info("Cargo Signal BI 'shipments' processed a timer request.");
 
-        // TODO: MinDate should be set in configuration and read here.  Add a note to developer regarding this.
+        // Modify minDate and cron schedule for your needs
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        Date today = new Date();
+        // starting from 7 days ago
+        String minDate = formatter.format(new Date(today.getTime() - Duration.ofDays(7).toMillis()));
 
-        // TODO: Enable the code below once development done (don't want it running every 15 seconds)
-        /* try
+        try
         {
-            Shipments shipments = new Shipments(context);
+            ShipmentsService shipments = new ShipmentsService(context);
             String containerName = shipments.uploadShipments(minDate);
             context.getLogger().info(String.format("Uploaded shipment data to blob storage container %s", containerName));
         } catch (Exception ex) {
             context.getLogger().severe("Failed to upload shipment data.  Exception: " + ex);
-        } */
+        }
 
         return;
     }

@@ -52,7 +52,7 @@ public class ShipmentsService {
   // All possible status values
   private List<String> statusValues = Arrays.asList("Draft", "Future", "Current", "Invalid", "Complete", "Canceled", "Deleted");
 
-  public ShipmentsService(ExecutionContext context) {
+  public ShipmentsService(ExecutionContext context) throws Exception {
     blobManager = new BlobStorageManager(context);
     logger = context.getLogger();
     httpClient = HttpClientBuilder.create().build();
@@ -61,10 +61,6 @@ public class ShipmentsService {
   }
 
   public String uploadShipments(String minDate) throws Exception {
-    // TODO: validation on minDate format? or just pass through?
-
-    // TODO: assumes API payloads always fit in memory
-
     // Container is only created once, then createBlob is called once per API call
     String containerName = createContainer();
 

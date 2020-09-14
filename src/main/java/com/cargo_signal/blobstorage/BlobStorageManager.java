@@ -6,9 +6,6 @@ import com.microsoft.azure.storage.blob.*;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.stream.Stream;
-
-import org.apache.commons.io.IOUtils;
 
 /**
  * Azure Blob Storage support.
@@ -19,16 +16,16 @@ public class BlobStorageManager {
   private ExecutionContext context = null;
   private CloudStorageAccount storageAccount = null;
 
-  public BlobStorageManager(ExecutionContext context) {
-    // TODO: Cleanup connection string once we have solution working well
-    //azureConnectionString = System.getenv("BI_Connector_Connection_String");
-    azureConnectionString = "DefaultEndpointsProtocol=https;AccountName=cargosignalbi;AccountKey=XJKlsZTdVdskKERz/Hhp0RzEGP8Fbjrz3jjIjEvdhsuFF+hMKFR8ips3FIrc3I9rx8L9xrzoCdti7+b/30N5vQ==;EndpointSuffix=core.windows.net";
-    context.getLogger().info("CN=" + azureConnectionString);
+  public BlobStorageManager(ExecutionContext context) throws Exception {
+    azureConnectionString = System.getenv("BI_CONNECTOR_CONNECTION_STRING");
     this.context = context;
 
     try {
       this.storageAccount = CloudStorageAccount.parse(azureConnectionString);
-    } catch (Exception ex) {}
+    } catch (Exception ex) {
+      context.getLogger().severe("Unable to connect to storage account.  Exception: " + ex);
+      throw ex;
+    }
   }
   
   public void createContainer(String name) throws Exception {
