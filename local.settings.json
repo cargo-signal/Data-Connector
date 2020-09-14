@@ -1,0 +1,11 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "java",
+    "HOST": "https://api.cargosignal.com",
+    "SHIPMENTS_PATH": "/shipments?status=Complete&from=%s&to=%s",
+    "SHIPMENT_ALERTS_PATH": "/shipments/%s/alerts",
+    "SHIPMENT_TELEMETRY_PATH": "/shipments/%s/telemetry",
+    "BEARER_TOKEN": "INSERT TOKEN HERE"
+  }
+}
