@@ -29,11 +29,13 @@ Open Source Connector for Cargo Signal Business Intelligence
   <p>The Data Connector exposes two HTTP endpoints along with a scheduled timer:</p>
   <p>Health</p>
   <p>The health endpoint is an HTTP endpoint that simply returns a 200 response and the text "Ok" when it is hit.  The endpoint is simply used to validate that the Azure Functions are deployed and running.</p>
+
 ```http
 GET https://dev-app.cargosignal.com/health
 ```
   <p>Shipments</p>
   <p>The shipments endpoint is an HTTP endpoint that will retrieve shipments, telemetry data for the shipments and alert data for the shipments.</p>
+
 ```http
 GET https://dev-app.cargosignal.com/shipments
 ```
@@ -43,6 +45,7 @@ GET https://dev-app.cargosignal.com/shipments
   <h3>Visual Studio Code</h3> <p><a href="https://code.visualstudio.com/download">Download VS Code</a></p>
   <p><a href="https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Ccsharp%2Cbash#v2">Install Azure Function Tools in VS Code</a></p>
   <h3>IntelliJ </h3><p><a href="https://www.jetbrains.com/idea/download/">Download IntelliJ</a></p>
+  <p><a href="https://docs.microsoft.com/en-us/azure/developer/java/toolkit-for-intellij/installation">Install Azure Dev Tools plugin for IntelliJ</a></p>
 
 <h2><a href="#id6">6&nbsp;&nbsp;&nbsp;Build and Execute Data Connector</a></h2>
 <p>To build, run "mvn clean package" from the command line.</p>
@@ -56,7 +59,8 @@ GET https://dev-app.cargosignal.com/shipments
 </ul>
 <h4>JetBrains IntelliJ</h4>
 <ul>
-  <li>YULGENE TO ADD HERE</li>
+  <li>The project may at first get imported strangely, you may see src/main and src/test treated as separate modules. Give the IDE a moment to finish up initializing, and wait for a message box that says "Non-managed pom.xml found". Then click on the "Add as Maven Project" link in the box. After some work, the view should re-adjust itself to show just the one module, Data-Connector.</li>
+  <li>If the initial import of the project treated main and test as separate modules, then you will also have to delete the main.iml and test.iml files that Intellij generated. This should fix any unrecognized import problems you may have at this point.</li>
 </ul>
 <h4>General Tips</h4>
 <ul>
