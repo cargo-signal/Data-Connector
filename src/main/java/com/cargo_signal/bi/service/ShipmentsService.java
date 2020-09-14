@@ -31,13 +31,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
  */
 public class ShipmentsService {
 
-  private BlobStorageManager blobManager = null;
+  private BlobStorageManager blobManager;
 
-  // TODO using qa for now
-  private String host = "https://qa-api.cargosignal.dev"; // "https://api.cargosignal.com";
-  private String shipmentsPath = "/shipments?status=Complete&from=%s&to=%s";
-  private String shipmentAlertsPath = "/shipments/%s/alerts";
-  private String shipmentTelemetryPath = "/shipments/%s/telemetry";
+  private String host = System.getenv("HOST");
+  private String shipmentsPath = System.getenv("SHIPMENTS_PATH");
+  private String shipmentAlertsPath = System.getenv("SHIPMENT_ALERTS_PATH");
+  private String shipmentTelemetryPath = System.getenv("SHIPMENT_TELEMETRY_PATH");
+  private String bearerToken = System.getenv("BEARER_TOKEN");
 
   private String fetchErrorMessage = "Exception when fetching %s for shipment ID %s: %s";
   private String parseErrorMessage = "Exception when parsing %s for shipment ID %s: %s";
@@ -48,8 +48,6 @@ public class ShipmentsService {
   private ObjectMapper objectMapper;
   private SimpleDateFormat simpleDateFormat;
   private Logger logger;
-  // TODO for now, this goes here
-  private String bearerToken = "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJFeHBlZGl0b3JzIEludGVybmF0aW9uYWwiLCJzdWIiOiJHMDM4MzMxMiIsImNvbXBhbnlJZCI6IkcwMzgzMzEyIiwibmFtZSI6Ikdvb2dsZSBJbmMuIiwidHlwZSI6IkNVU1RPTUVSIiwicmVxdWVzdG9yIjoiUmFuZHkuR291bGRAY2FyZ29zaWduYWwuY29tIiwicmVxdWVzdG9yRW1haWwiOiJSYW5keS5Hb3VsZEBjYXJnb3NpZ25hbC5jb20ifQ.-RaqfzSgJbc9DS-szPP0VZ2T-IPGabrggviiJi-JoG1YhQuAadYa5McyjXV--J0qYfrhMbwpVhmQm0nUi_lNRw";
 
   // All possible status values
   private List<String> statusValues = Arrays.asList("Draft", "Future", "Current", "Invalid", "Complete", "Canceled", "Deleted");
@@ -63,8 +61,6 @@ public class ShipmentsService {
   }
 
   public String uploadShipments(String minDate) throws Exception {
-    // TODO: How to pass the bearer token in? maybe some az env var, if such a thing exists?
-
     // TODO: validation on minDate format? or just pass through?
 
     // TODO: assumes API payloads always fit in memory
