@@ -33,12 +33,14 @@ Open Source Connector for Cargo Signal Business Intelligence
 ```http
 GET https://dev-app.cargosignal.com/health
 ```
-  <p>Shipments</p>
+  <p>Shipments (via HTTP)</p>
   <p>The shipments endpoint is an HTTP endpoint that will retrieve shipments, telemetry data for the shipments and alert data for the shipments.</p>
 
 ```http
 GET https://dev-app.cargosignal.com/shipments
 ```
+  <p>Shipments (via Timer)</p>
+  <p>The shipments timer-invoked function returns the same data as the Shipments HTTP function.  By default it is configured to execute once per day and retrieve data from the last day.  The frequency of its execution can be modified by changing the Data Connector code to use a different date.</p>
 
 <h2><a href="#id5">5&nbsp;&nbsp;&nbsp;IDE Setup</a></h2>
   <p>While any code editor will work, Visual Studio Code and IntelliJ offer additional built-in Azure and Java functionality that you will likely find helpful.</p>
@@ -51,7 +53,21 @@ GET https://dev-app.cargosignal.com/shipments
 <p>To build, run "mvn clean package" from the command line.</p>
 <p>To execute, run "mvn azure-functions:run" from the command line. </p>
 
-<h2><a href="#id7">7&nbsp;&nbsp;&nbsp;Tips</a></h2>
+<h2><a href="#id7">7&nbsp;&nbsp;&nbsp;Deployment</a></h2>
+<p>Deployment can be achieved via scripts (e.g. PowerShell), CI/CD pipelines or from Visual Studio Code or IntelliJ.</p>
+<p>For deployment from Visual Studio Code, see the <a href="https://docs.microsoft.com/en-us/azure/developer/javascript/tutorial-vscode-serverless-node-01?tabs=bash">Deploy Azure Functions from Visual Studio Code</a> article from Microsoft.</p>
+<p>For deployment from JetBrains IntelliJ, see the <a href="https://blog.jetbrains.com/dotnet/2019/05/09/building-azure-functions-sql-database-improvements-azure-toolkit-rider-2019-1/">blog</a> from JetBrains.</p>
+<p>The Data Connector relies on a set of Azure application settings for its Azure Functions to operate properly.  Application settings you will need to provide in the Azure portal or via deployment tools are:</p>
+<ul>
+  <li>BEARER_TOKEN - the token used to access Cargo Signal APIs</li>
+  <li>BI_CONNECTOR_CONNECTION_STRING - the connection string to your Azure Blob Storage</li>
+  <li>HOST - the Cargo Signal public API endpoint</li>
+  <li>SHIPMENTS_PATH - Path to the Shipments endpoint (located in local.settings.json for reference)</li>
+  <li>SHIPMENT_TELEMETRY_PATH - Path to the Shipment Telemetry endpoint (located in local.settings.json for reference)</li>
+  <li>SHIPMENT_ALERTS_PATH - Path to the Shipment Alerts endpoint (located in local.settings.json for reference)</li>
+</ul>
+
+<h2><a href="#id8">8&nbsp;&nbsp;&nbsp;Tips</a></h2>
 <h4>Visual Studio Code</h4>
 <ul>
   <li><a href="https://github.com/microsoft/azure-tools-for-java/wiki/FAQ">Maven and JavaHome Path issues in VS Code</a></li>
@@ -70,15 +86,13 @@ GET https://dev-app.cargosignal.com/shipments
 
 ## Usage
 
-```http
-GET https://dev-app.cargosignal.com/connector/shipments?minDate=2020-08-27T00:00:00.000Z
-```
+The Data Connector calls three Cargo Signal APIs that are defined in the Cargo Signal Public API:
 
-```json
-{
-  "json": "goes here"
-}
-```
+<ul>
+  <li>Shipments.  https://api.cargosignal.com/docs/index.html#resources-shipment-documentation-get-shipments</li>
+  <li>Telemetry Data.  https://api.cargosignal.com/docs/index.html#resources-shipment-documentation-get-telemetry-data</li>
+  <li>Shipment Alerts.  Arriving in future release.</li>
+</ul>
 
 
 ## FAQ's
