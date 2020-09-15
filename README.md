@@ -10,7 +10,7 @@ Open Source Connector for Cargo Signal Business Intelligence
 
 <h2><a href="#id1">1&nbsp;&nbsp;&nbsp;About this document</a></h2>
   <p>The Data Connector is a sample solution to demonstrate how to leverage Cargo Signal APIs, cloud storage and BI tools to better understand your shipments through analytics.  The solution provides for retrieving completed shipments along with the associated telemetry and alert data. This data is pushed to Azure, where a PowerBI can retrieve the data and provide a dashboard representing your completed shipments.</p>
-  <p>The solution leverages Cargo Signal APIs, Java 8, Microsoft Azure and Microsoft Power BI.  If your organization prefers C# or Python for the implementation language or perhaps Amazon Web Services over Azure, you should be able to use this solution as a reference solution to customize and build the solution that best fits your organization's environment and technology stack.</p>
+  <p>The solution leverages Cargo Signal APIs, Java 8, Microsoft Azure and Microsoft Power BI.  If your organization prefers C# or Python for the implementation language, or Amazon Web Services over Azure, or Tableau over Microsoft BI, you should be able to use this solution as a reference solution to customize and build the solution that best fits your organization's environment and technology stack.</p>
 
 <h2><a href="#id2">2&nbsp;&nbsp;&nbsp;Prerequisites</a></h2>
   <p>To use the sample application, you will need:</p>
@@ -18,6 +18,7 @@ Open Source Connector for Cargo Signal Business Intelligence
     <li>Cargo Signal API client key</li>
     <li>Development IDE</li>
     <li>Java 8</li>
+    <li>Maven</li>
     <li>Microsoft Azure Account</li>
     <li>Microsoft Power BI</li>
   </ul>
@@ -31,13 +32,13 @@ Open Source Connector for Cargo Signal Business Intelligence
   <p>The health endpoint is an HTTP endpoint that simply returns a 200 response and the text "Ok" when it is hit.  The endpoint is simply used to validate that the Azure Functions are deployed and running.</p>
 
 ```http
-GET https://dev-app.cargosignal.com/health
+GET https://YOUR_DOMAIN.com/health
 ```
   <p>Shipments (via HTTP)</p>
   <p>The shipments endpoint is an HTTP endpoint that will retrieve shipments, telemetry data for the shipments and alert data for the shipments.</p>
 
 ```http
-GET https://dev-app.cargosignal.com/shipments
+GET https://YOUR_DOMAIN.com/shipments
 ```
   <p>Shipments (via Timer)</p>
   <p>The shipments timer-invoked function returns the same data as the Shipments HTTP function.  By default it is configured to execute once per day and retrieve data from the last day.  The frequency of its execution can be modified by changing the Data Connector code to use a different date.</p>
