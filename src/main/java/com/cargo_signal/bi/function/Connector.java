@@ -72,19 +72,19 @@ public class Connector {
     public void getShipmentsTimer(
             @TimerTrigger(
             name = "shipmentsTimer",
-            schedule = "0 0 * * *")  // Modify this CRON expression to set the schedule
+            schedule = "0 0 6 * * *")  // Modify this CRON expression to set the schedule; currently every day at 6:00 am
             String timerInfo,
             final ExecutionContext context) {
 
-        // CRON examples: https://crontab.guru/examples.html
+        // CRON examples: https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer?tabs=csharp#ncrontab-expressions
 
         context.getLogger().info("Cargo Signal BI 'shipments' processed a timer request.");
 
         // Modify minDate and cron schedule for your needs
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         Date today = new Date();
-        // starting from 7 days ago
-        String minDate = formatter.format(new Date(today.getTime() - Duration.ofDays(7).toMillis()));
+        // starting from 1 day ago
+        String minDate = formatter.format(new Date(today.getTime() - Duration.ofDays(1).toMillis()));
 
         try
         {
