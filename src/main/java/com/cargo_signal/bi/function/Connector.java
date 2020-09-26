@@ -56,13 +56,13 @@ public class Connector {
         final String minDate = request.getQueryParameters().get("minDate");
 
         if (minDate == null) {
-            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("'minDate' parameter required in the query string or in the request body").build();
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("'minDate' parameter required in the query string.").build();
         }
 
         try {
             ShipmentsService shipmentsService = new ShipmentsService(context);
-            String containerName = shipmentsService.uploadShipments(minDate);
-            return request.createResponseBuilder(HttpStatus.OK).body(String.format("Uploaded shipment data to blob storage container %s", containerName)).build();
+            shipmentsService.uploadShipments(minDate);
+            return request.createResponseBuilder(HttpStatus.OK).body("Uploaded shipment data to blob storage containers.").build();
         } catch (Exception ex) {
             return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload shipment data.  Exception: " + ex).build();
         }        
@@ -89,8 +89,8 @@ public class Connector {
         try
         {
             ShipmentsService shipments = new ShipmentsService(context);
-            String containerName = shipments.uploadShipments(minDate);
-            context.getLogger().info(String.format("Uploaded shipment data to blob storage container %s", containerName));
+            shipments.uploadShipments(minDate);
+            context.getLogger().info("Uploaded shipment data to blob storage containers.");
         } catch (Exception ex) {
             context.getLogger().severe("Failed to upload shipment data.  Exception: " + ex);
         }

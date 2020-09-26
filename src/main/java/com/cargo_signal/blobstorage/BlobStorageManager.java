@@ -50,6 +50,8 @@ public class BlobStorageManager {
   public void createBlob(String containerName, String blobName, String data) throws Exception {
     InputStream targetStream = null;
 
+    context.getLogger().info("Pushing to container '" + containerName + "', the blob named '" + blobName + "'.");
+
     try {
       CloudBlobClient blobClient = createBlobClient();
       CloudBlobContainer container = blobClient.getContainerReference(containerName);
