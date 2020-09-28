@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -33,16 +34,20 @@ public class ShipmentsService {
 
   private BlobStorageManager blobManager;
 
-  private String host = System.getenv("HOST");
-  private String shipmentsPath = System.getenv("SHIPMENTS_PATH");
-  private String shipmentAlertsPath = System.getenv("SHIPMENT_ALERTS_PATH");
-  private String shipmentTelemetryPath = System.getenv("SHIPMENT_TELEMETRY_PATH");
-  private String bearerToken = System.getenv("BEARER_TOKEN");
+  private final String host = System.getenv("HOST");
+  private final String shipmentsPath = System.getenv("SHIPMENTS_PATH");
+  private final String shipmentAlertsPath = System.getenv("SHIPMENT_ALERTS_PATH");
+  private final String shipmentTelemetryPath = System.getenv("SHIPMENT_TELEMETRY_PATH");
+  private final String bearerToken = System.getenv("BEARER_TOKEN");
 
-  private String fetchErrorMessage = "Exception when fetching %s for shipment ID %s: %s";
-  private String parseErrorMessage = "Exception when parsing %s for shipment ID %s: %s";
-  private String shipmentFetchErrorMessage = "Exception when fetching shipments for date range %s to %s: %s";
-  private String shipmentParseErrorMessage = "Exception when parsing shipments for date range %s to %s: %s";
+  private final String fetchErrorMessage = "Exception when fetching %s for shipment ID %s: %s";
+  private final String parseErrorMessage = "Exception when parsing %s for shipment ID %s: %s";
+  private final String shipmentFetchErrorMessage = "Exception when fetching shipments for date range %s to %s: %s";
+  private final String shipmentParseErrorMessage = "Exception when parsing shipments for date range %s to %s: %s";
+
+  private final String ContainerShipments = "connector-shipments";
+  private final String ContainerAlerts = "connector-alerts";
+  private final String ContainerTelemetry = "connector-telemetry";
 
   private HttpClient httpClient;
   private ObjectMapper objectMapper;
@@ -58,32 +63,32 @@ public class ShipmentsService {
     httpClient = HttpClientBuilder.create().build();
     objectMapper = new ObjectMapper();
     simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    createContainers();
   }
 
-  public String uploadShipments(String minDate) throws Exception {
-    // Container is only created once, then createBlob is called once per API call
-    String containerName = createContainer();
-
+  public void uploadShipments(String minDate) throws Exception {
     String today = simpleDateFormat.format(new Date());
 
     List<Shipment> shipments = getShipments(minDate, today + "T00:00:00.000Z");
     String rawShipments = objectMapper.writeValueAsString(shipments);
-    blobManager.createBlob(containerName, "shipments" + today + ".json", rawShipments);
+    blobManager.createBlob(ContainerShipments, "shipments" + today + ".json", rawShipments);
 
     List<ShipmentAlert> shipmentAlerts = getShipmentAlerts(shipments);
     String rawShipmentAlerts = objectMapper.writeValueAsString(shipmentAlerts);
-    blobManager.createBlob(containerName, "shipmentAlerts" + today + ".json", rawShipmentAlerts);
+    blobManager.createBlob(ContainerAlerts, "shipmentAlerts" + today + ".json", rawShipmentAlerts);
 
     List<DeviceTelemetry> telemetries = getDeviceTelemetries(shipments);
     String rawShipmentTelemetry = objectMapper.writeValueAsString(telemetries);
-    blobManager.createBlob(containerName, "shipmentTelemetry" + today + ".json", rawShipmentTelemetry);
-
-    return containerName;
+    blobManager.createBlob(ContainerTelemetry, "shipmentTelemetry" + today + ".json", rawShipmentTelemetry);
   }
 
   private List<Shipment> getShipments(String minDate, String maxDate) {
     String shipmentsUrl = host + String.format(shipmentsPath, minDate, maxDate);
-    List<Shipment> shipments = Collections.EMPTY_LIST;
+    logger.info("Calling the shipments API - " + shipmentsUrl);
+
+    List<Shipment> shipments = Collections.EMPTY_LIST;    
+
     try {
       String rawShipments = get(shipmentsUrl);
       shipments = objectMapper.readValue(rawShipments, new TypeReference<List<Shipment>>() {});
@@ -144,8 +149,7 @@ public class ShipmentsService {
     try {
       HttpResponse response = httpClient.execute(getRequest);
       if (response.getStatusLine().getStatusCode() == 200) {
-        String result = IOUtils.toString((response.getEntity().getContent()), StandardCharsets.UTF_8);
-        return result;
+        return IOUtils.toString((response.getEntity().getContent()), StandardCharsets.UTF_8);
       } else {
         throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
       }
@@ -154,11 +158,11 @@ public class ShipmentsService {
     }
   }
 
-  private String createContainer() throws Exception {
-    Instant instant = Instant.now();    
-    String containerName = "connector-blob-" + blobManager.sanitizeContainerName(instant.toString());
-    blobManager.createContainer(containerName);
+  private void createContainers() throws Exception {
 
-    return containerName;
+    blobManager.createContainer(ContainerShipments);
+    blobManager.createContainer(ContainerAlerts);
+    blobManager.createContainer(ContainerTelemetry);
+
   }
 }
