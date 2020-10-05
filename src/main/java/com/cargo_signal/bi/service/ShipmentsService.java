@@ -11,6 +11,7 @@ import com.microsoft.azure.functions.ExecutionContext;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -68,19 +69,22 @@ public class ShipmentsService {
   }
 
   public void uploadShipments(String minDate) throws Exception {
-    String today = simpleDateFormat.format(new Date());
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(simpleDateFormat.parse(minDate));
+    calendar.add(Calendar.DAY_OF_MONTH, 1);
+    String fileDate = simpleDateFormat.format(calendar.getTime());
 
-    List<Shipment> shipments = getShipments(minDate, today + "T00:00:00.000Z");
+    List<Shipment> shipments = getShipments(minDate + "T00:00:00.000Z", fileDate + "T00:00:00.000Z");
     String rawShipments = objectMapper.writeValueAsString(shipments);
-    blobManager.createBlob(ContainerShipments, "shipments" + today + ".json", rawShipments);
+    blobManager.createBlob(ContainerShipments, "shipments" + minDate + ".json", rawShipments);
 
     List<ShipmentAlert> shipmentAlerts = getShipmentAlerts(shipments);
     String rawShipmentAlerts = objectMapper.writeValueAsString(shipmentAlerts);
-    blobManager.createBlob(ContainerAlerts, "shipmentAlerts" + today + ".json", rawShipmentAlerts);
+    blobManager.createBlob(ContainerAlerts, "shipmentAlerts" + minDate + ".json", rawShipmentAlerts);
 
     List<DeviceTelemetry> telemetries = getDeviceTelemetries(shipments);
     String rawShipmentTelemetry = objectMapper.writeValueAsString(telemetries);
-    blobManager.createBlob(ContainerTelemetry, "shipmentTelemetry" + today + ".json", rawShipmentTelemetry);
+    blobManager.createBlob(ContainerTelemetry, "shipmentTelemetry" + minDate + ".json", rawShipmentTelemetry);
   }
 
   private List<Shipment> getShipments(String minDate, String maxDate) {
