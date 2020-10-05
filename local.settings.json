@@ -3,9 +3,9 @@
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "java",
     "HOST": "https://api.cargosignal.com",
-    "SHIPMENTS_PATH": "/shipments?status=Complete&from=%s&to=%s",
-    "SHIPMENT_ALERTS_PATH": "/shipments/%s/alerts",
-    "SHIPMENT_TELEMETRY_PATH": "/shipments/%s/telemetry",
+    "SHIPMENTS_PATH": "/v3/shipments?status=Complete&from=%s&to=%s",
+    "SHIPMENT_ALERTS_PATH": "/v3/shipments/%s/alerts",
+    "SHIPMENT_TELEMETRY_PATH": "/v3/shipments/%s/telemetry",
     "BEARER_TOKEN": "INSERT TOKEN HERE",
     "BI_CONNECTOR_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=cargosignalbi;AccountKey=XJKlsZTdVdskKERz/Hhp0RzEGP8Fbjrz3jjIjEvdhsuFF+hMKFR8ips3FIrc3I9rx8L9xrzoCdti7+b/30N5vQ==;EndpointSuffix=core.windows.net",
     "AzureWebJobsStorage": "NOT_USED"

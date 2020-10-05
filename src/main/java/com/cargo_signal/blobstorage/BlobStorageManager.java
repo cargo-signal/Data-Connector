@@ -4,8 +4,10 @@ import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.storage.*;
 import com.microsoft.azure.storage.blob.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Azure Blob Storage support.
@@ -57,8 +59,9 @@ public class BlobStorageManager {
       CloudBlobContainer container = blobClient.getContainerReference(containerName);
       CloudBlockBlob blob = container.getBlockBlobReference(blobName);
 
-      targetStream = org.apache.commons.io.IOUtils.toInputStream(data, Charset.defaultCharset());
-      blob.upload(targetStream, data.length());
+      targetStream = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
+      blob.upload(targetStream, data.getBytes(StandardCharsets.UTF_8).length);
+
     } catch (Exception ex) {
       context.getLogger().severe("Failed to create blob.  Exception: " + ex);
       throw ex;

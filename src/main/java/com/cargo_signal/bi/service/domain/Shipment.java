@@ -11,12 +11,17 @@ public class Shipment {
   private String referenceNumber;
   private String customer;
   private List<String> serviceProvider;
+  private String origin;
+  private String destination;
+  private String mode;
   private String status;
+  private String serviceType;
   private String scheduledPickupTime;
   private Location pickupLocation;
   private String scheduledDeliveryTime;
   private Location deliveryLocation;
   private Location lastKnownLocation;
+  private Integer activeAlertCount;
   private List<Reference> references;
   private String shipmentCompletedDateTime;
   private String shipmentId;
@@ -37,8 +42,24 @@ public class Shipment {
     return serviceProvider;
   }
 
+  public String getOrigin() {
+    return origin;
+  }
+
+  public String getDestination() {
+    return destination;
+  }
+
+  public String getMode() {
+    return mode;
+  }
+
   public String getStatus() {
     return status;
+  }
+
+  public String getServiceType() {
+    return serviceType;
   }
 
   public String getScheduledPickupTime() {
@@ -86,7 +107,11 @@ public class Shipment {
         .append(referenceNumber, shipment.referenceNumber)
         .append(customer, shipment.customer)
         .append(serviceProvider, shipment.serviceProvider)
+        .append(origin, shipment.origin)
+        .append(destination, shipment.destination)
+        .append(mode, shipment.mode)
         .append(status, shipment.status)
+        .append(serviceType, shipment.serviceType)
         .append(scheduledPickupTime, shipment.scheduledPickupTime)
         .append(pickupLocation, shipment.pickupLocation)
         .append(scheduledDeliveryTime, shipment.scheduledDeliveryTime)
@@ -105,7 +130,11 @@ public class Shipment {
         .append(referenceNumber)
         .append(customer)
         .append(serviceProvider)
+        .append(origin)
+        .append(destination)
+        .append(mode)
         .append(status)
+        .append(serviceType)
         .append(scheduledPickupTime)
         .append(pickupLocation)
         .append(scheduledDeliveryTime)
