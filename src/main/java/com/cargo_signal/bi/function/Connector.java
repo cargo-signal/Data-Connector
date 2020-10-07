@@ -10,9 +10,11 @@ import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 import com.microsoft.azure.functions.annotation.TimerTrigger;
 
-import com.cargo_signal.bi.service.Shipments;
-import com.cargo_signal.blobstorage.BlobStorageManager;
+import com.cargo_signal.bi.service.ShipmentsService;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -45,24 +47,22 @@ public class Connector {
             @HttpTrigger(
                 name = "shipments",
                 methods = {HttpMethod.GET},
-                authLevel = AuthorizationLevel.ANONYMOUS) // TODO: Once we have bearer token, change to AuthorizationLevel.FUNCTION
+                authLevel = AuthorizationLevel.ANONYMOUS)
                 HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
         context.getLogger().info("Cargo Signal BI 'shipments' processed a request.");
 
         // Parse query parameter
-        final String query = request.getQueryParameters().get("minDate");
-        final String minDate = request.getBody().orElse(query);
+        final String minDate = request.getQueryParameters().get("minDate");
 
         if (minDate == null) {
-            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("'minDate' parameter required in the query string or in the request body").build();
-        } 
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("'minDate' parameter required in the query string.").build();
+        }
 
-        try 
-        {
-            Shipments shipments = new Shipments(context);
-            String containerName = shipments.uploadShipments(minDate);
-            return request.createResponseBuilder(HttpStatus.OK).body(String.format("Uploaded shipment data to blob storage container %s", containerName)).build();
+        try {
+            ShipmentsService shipmentsService = new ShipmentsService(context);
+            shipmentsService.uploadShipments(minDate);
+            return request.createResponseBuilder(HttpStatus.OK).body("Uploaded shipment data to blob storage containers.").build();
         } catch (Exception ex) {
             return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload shipment data.  Exception: " + ex).build();
         }        
@@ -72,25 +72,32 @@ public class Connector {
     public void getShipmentsTimer(
             @TimerTrigger(
             name = "shipmentsTimer",
-            schedule = "*/15 * * * * *")  // Modify this CRON expression to set the schedule
+            schedule = "0 0 6 * * *")  // Modify this CRON expression to set the schedule; currently every day at 6:00 am Pacific
             String timerInfo,
             final ExecutionContext context) {
 
-        // CRON examples: https://crontab.guru/examples.html
+        // CRON examples: https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer?tabs=csharp#ncrontab-expressions
 
-        context.getLogger().info("Cargo Signal BI 'shipments' processed a timer request.");
+        // WEBSITE_TIME_ZONE app setting allows to use a local time for the CRON expression.  The name will vary between Linux and Windows host.
 
-        // TODO: MinDate should be set in configuration and read here.  Add a note to developer regarding this.
+        context.getLogger().info("Cargo Signal BI 'shipments' processing a timer request.");
 
-        // TODO: Enable the code below once development done (don't want it running every 15 seconds)
-        /* try
+        // Modify minDate and cron schedule for your needs
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date today = new Date();
+        // starting from 1 day ago
+        String minDate = formatter.format(new Date(today.getTime() - Duration.ofDays(1).toMillis()));
+        
+        context.getLogger().info("Retrieving shipments for one day starting at " + minDate);
+
+        try
         {
-            Shipments shipments = new Shipments(context);
-            String containerName = shipments.uploadShipments(minDate);
-            context.getLogger().info(String.format("Uploaded shipment data to blob storage container %s", containerName));
+            ShipmentsService shipments = new ShipmentsService(context);
+            shipments.uploadShipments(minDate);
+            context.getLogger().info("Uploaded shipment data to blob storage containers.");
         } catch (Exception ex) {
             context.getLogger().severe("Failed to upload shipment data.  Exception: " + ex);
-        } */
+        }
 
         return;
     }
