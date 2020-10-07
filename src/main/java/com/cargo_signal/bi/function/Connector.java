@@ -72,19 +72,23 @@ public class Connector {
     public void getShipmentsTimer(
             @TimerTrigger(
             name = "shipmentsTimer",
-            schedule = "0 0 6 * * *")  // Modify this CRON expression to set the schedule; currently every day at 6:00 am
+            schedule = "0 0 6 * * *")  // Modify this CRON expression to set the schedule; currently every day at 6:00 am Pacific
             String timerInfo,
             final ExecutionContext context) {
 
         // CRON examples: https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer?tabs=csharp#ncrontab-expressions
 
-        context.getLogger().info("Cargo Signal BI 'shipments' processed a timer request.");
+        // WEBSITE_TIME_ZONE app setting allows to use a local time for the CRON expression.  The name will vary between Linux and Windows host.
+
+        context.getLogger().info("Cargo Signal BI 'shipments' processing a timer request.");
 
         // Modify minDate and cron schedule for your needs
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date today = new Date();
         // starting from 1 day ago
         String minDate = formatter.format(new Date(today.getTime() - Duration.ofDays(1).toMillis()));
+        
+        context.getLogger().info("Retrieving shipments for one day starting at " + minDate);
 
         try
         {
