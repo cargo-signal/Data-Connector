@@ -24,7 +24,15 @@ Open Source Connector for Cargo Signal Business Intelligence
   </ul>
 
 <h2><a href="#id3">3&nbsp;&nbsp;&nbsp;How Does It Work</a></h2>
-  <p>INSERT DIAGRAM HERE</p>
+
+The figure below illustrates the end-to-end architecture of the BI integration solution.  At the core of the system,
+the Cargo Signal public API provides access to shipment, telemetry and alert data.  The Data Connector can be built and run
+as an Azure function or modified to run as a stand alone application.  If run as an Azure function, the connector will
+pull new data for completed shipments from CargoSignal once per day, or on another specified interval. The Data Connector
+deposits data returned from the API into Azure blob storage csollections.  Once stored in blog storage, the data can be
+access and analyized with PowerBI.
+
+  ![Architecture](architecture.png)
 
 <h2><a href="#id4">4&nbsp;&nbsp;&nbsp;Usage</a></h2>
   <p>The Data Connector exposes two HTTP endpoints along with a scheduled timer:</p>
@@ -95,11 +103,13 @@ The Data Connector calls three Cargo Signal APIs that are defined in the Cargo S
   <li>Shipment Alerts.  Arriving in future release.</li>
 </ul>
 
+## Cargo Signal Public API
+The Data Connector relies on the Cargo Signal public API to retreive shipment, telemetry and alert data from the Cargo Signal system.  The public API is documented at https://api.cargosignal.com.  A valid access key (bearer token) is required
+to access the API and use the Data Connector.  The data connector utilizes the following three APIs:
 
-## FAQ's
+* [Get shipments](https://api.cargosignal.com/docs/index.html#resources-shipment-documentation-get-shipments)
+* GET /alerts - coming soon
+* [Get telemetry data](https://api.cargosignal.com/docs/index.html#resources-shipment-documentation-get-telemetry-data)
 
-* How do I obtain a client key?
-* I am looking for data not returned by the APIs, how can I get it added?
-* If you have any questions or corrections, please contact ????????
 
 &copy; 2020 Cargo Signal
