@@ -1,5 +1,5 @@
 
-<h1 align="center">ADD CARGO SIGNAL IMAGE HERE</h1>
+<h1 align="center">![Cargo Signal Logo](logo-cargo-signal.png)</h1>
 <h1 align="center">Cargo Signal BI Data Connector</h1>
 
 <h3 align="center">
@@ -74,6 +74,7 @@ GET https://YOUR_DOMAIN.com/shipments
   <li>SHIPMENTS_PATH - Path to the Shipments endpoint (located in local.settings.json for reference)</li>
   <li>SHIPMENT_TELEMETRY_PATH - Path to the Shipment Telemetry endpoint (located in local.settings.json for reference)</li>
   <li>SHIPMENT_ALERTS_PATH - Path to the Shipment Alerts endpoint (located in local.settings.json for reference)</li>
+  <li>WEBSITE_TIME_ZONE - (Optional) The time zone for the CRON expression on the timer trigger.  Makes it easy to write the expression in local time rather than calculate UTC</li>
 </ul>
 
 <h2><a href="#id8">8&nbsp;&nbsp;&nbsp;Tips</a></h2>
