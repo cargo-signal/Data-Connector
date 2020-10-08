@@ -1,5 +1,6 @@
 
-<h1 align="center">![Cargo Signal Logo](logo-cargo-signal.png)</h1>
+![Cargo Signal Logo](logo-cargo-signal.png)
+
 <h1 align="center">Cargo Signal BI Data Connector</h1>
 
 <h3 align="center">
