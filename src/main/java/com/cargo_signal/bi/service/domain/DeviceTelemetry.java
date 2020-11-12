@@ -15,6 +15,7 @@ public class DeviceTelemetry {
   private Double humidity;
   private Double hepe;
   private Double pressure;
+  private Double shock;
   private Double tilt;
   private Double light;
   private Double latitude;
@@ -56,6 +57,8 @@ public class DeviceTelemetry {
     return pressure;
   }
 
+  public Double getShock() { return shock; }
+
   public Double getTilt() {
     return tilt;
   }
@@ -90,6 +93,7 @@ public class DeviceTelemetry {
         .append(humidity, that.humidity)
         .append(hepe, that.hepe)
         .append(pressure, that.pressure)
+        .append(shock, that.shock)
         .append(tilt, that.tilt)
         .append(light, that.light)
         .append(latitude, that.latitude)
@@ -109,6 +113,7 @@ public class DeviceTelemetry {
         .append(humidity)
         .append(hepe)
         .append(pressure)
+        .append(shock)
         .append(tilt)
         .append(light)
         .append(latitude)
