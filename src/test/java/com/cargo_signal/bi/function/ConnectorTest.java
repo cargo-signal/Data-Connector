@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -23,8 +24,7 @@ public class ConnectorTest {
     @Test
     public void testHealth() throws Exception {
         // Arrange
-        @SuppressWarnings("unchecked")
-        final HttpRequestMessage<Optional<String>> req = mock(HttpRequestMessage.class);
+        @SuppressWarnings("unchecked") final HttpRequestMessage<Optional<String>> req = mock(HttpRequestMessage.class);
 
         final Optional<String> queryBody = Optional.empty();
         doReturn(queryBody).when(req).getBody();
@@ -54,8 +54,7 @@ public class ConnectorTest {
     @Test
     public void testShipments() throws Exception {
         // Arrange
-        @SuppressWarnings("unchecked")
-        final String MinimumDate = "2020-08-27T00:00:00.000Z";
+        @SuppressWarnings("unchecked") final String MinimumDate = "2020-08-27";
         final HttpRequestMessage<Optional<String>> req = mock(HttpRequestMessage.class);
 
         final Map<String, String> queryParams = new HashMap<>();
@@ -80,18 +79,17 @@ public class ConnectorTest {
         final HttpResponseMessage ret = new Connector().getShipments(req, context);
 
         // Assert
-        assertEquals(ret.getStatus(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, ret.getStatus());
         assertTrue(ret.getBody().toString().startsWith("Uploaded shipment data to blob storage container connector-blob-"));
     }
-    
+
     /**
      * Unit test for shipments method.  Missing query string parameter.
      */
     @Test
     public void testShipmentsMissingParameter() throws Exception {
         // Arrange
-        @SuppressWarnings("unchecked")
-        final HttpRequestMessage<Optional<String>> req = mock(HttpRequestMessage.class);
+        @SuppressWarnings("unchecked") final HttpRequestMessage<Optional<String>> req = mock(HttpRequestMessage.class);
 
         final Optional<String> queryBody = Optional.empty();
         doReturn(queryBody).when(req).getBody();
@@ -111,6 +109,6 @@ public class ConnectorTest {
         final HttpResponseMessage ret = new Connector().getShipments(req, context);
 
         // Assert
-        assertEquals(ret.getStatus(), HttpStatus.BAD_REQUEST);
+        assertEquals(HttpStatus.BAD_REQUEST, ret.getStatus());
     }
 }
