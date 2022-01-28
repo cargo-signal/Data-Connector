@@ -80,7 +80,7 @@ public class ConnectorTest {
 
         // Assert
         assertEquals(HttpStatus.OK, ret.getStatus());
-        assertTrue(ret.getBody().toString().startsWith("Uploaded shipment data to blob storage container connector-blob-"));
+        assertTrue(ret.getBody().toString().startsWith("Uploaded shipment data to blob storage containers."));
     }
 
     /**
