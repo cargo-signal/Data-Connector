@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -207,7 +206,7 @@ public class ShipmentsService {
 
     private void getAuthenticationToken() throws IOException {
 
-        List<NameValuePair> payload = new ArrayList<NameValuePair>();
+        List<NameValuePair> payload = new ArrayList<>();
         payload.add(new BasicNameValuePair("audience", audience));
         payload.add(new BasicNameValuePair("client_id", clientId));
         payload.add(new BasicNameValuePair("client_secret", clientSecret));
