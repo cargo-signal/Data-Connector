@@ -46,13 +46,10 @@ public class ShipmentsService {
     private final String authorizationURL = System.getenv("AUTHORIZATION_URL");
     private final String clientId = System.getenv("CLIENT_ID");
     private final String clientSecret = System.getenv("CLIENT_SECRET");
-    private final String grantType = "client_credentials";
 
     private final String fetchErrorMessage = "Exception when fetching %s for shipment ID %s: %s";
     private final String parseErrorMessage = "Exception when parsing %s for shipment ID %s: %s";
     private final String encodingErrorMessage = "Exception when encoding shipment reference %s: error: %s";
-    private final String shipmentFetchErrorMessage = "Exception when fetching shipments for date range %s to %s: %s";
-    private final String shipmentParseErrorMessage = "Exception when parsing shipments for date range %s to %s: %s";
 
     private final String ContainerShipments = "connector-shipments";
     private final String ContainerAlerts = "connector-alerts";
@@ -115,7 +112,7 @@ public class ShipmentsService {
 
         try {
             int currentPage = 0;
-            boolean lastPage = false;
+            boolean lastPage;
             do {
                 String tmpURL = String.format(shipmentsUrl, currentPage);
                 logger.info("Calling the shipments API - " + tmpURL);
@@ -128,8 +125,10 @@ public class ShipmentsService {
                 currentPage++;
             } while (!lastPage);
         } catch (JsonProcessingException e) {
+            String shipmentParseErrorMessage = "Exception when parsing shipments for date range %s to %s: %s";
             logger.warning(String.format(shipmentParseErrorMessage, minDate, maxDate, e));
         } catch (IOException e) {
+            String shipmentFetchErrorMessage = "Exception when fetching shipments for date range %s to %s: %s";
             logger.warning(String.format(shipmentFetchErrorMessage, minDate, maxDate, e));
         }
         return shipments;
@@ -143,7 +142,7 @@ public class ShipmentsService {
             String customerId = shipment.getCustomerId();
             if (trackingNumber != null && customerId != null) {
                 int currentPage = 0;
-                boolean lastPage = false;
+                boolean lastPage;
                 try {
                     do {
                         String shipmentsTelemetryUrl = host + String.format(shipmentTelemetryPath,
@@ -210,6 +209,7 @@ public class ShipmentsService {
         payload.add(new BasicNameValuePair("audience", audience));
         payload.add(new BasicNameValuePair("client_id", clientId));
         payload.add(new BasicNameValuePair("client_secret", clientSecret));
+        String grantType = "client_credentials";
         payload.add(new BasicNameValuePair("grant_type", grantType));
 
         HttpPost postRequest = new HttpPost(authorizationURL);
