@@ -99,14 +99,19 @@ public class ShipmentsService {
         blobManager.createBlob(ContainerTelemetry, "shipmentTelemetry" + minDate + ".json", rawShipmentTelemetry);
     }
 
-    private List<Shipment> getShipments(String minDate, String maxDate) {
+    private List<Shipment> getShipments(String minDate, String maxDate) throws Exception{
         String shipmentsUrl = host + shipmentsPath;
-        // logger.info("Calling the shipments API - " + shipmentsUrl);
 
         List<Shipment> shipments = new ArrayList<>();
 
-        String postBody =
-                String.format("{ \"status\": [\"COMPLETE\"], \"completedDateTimeFrom\": \"%s\", \"completedDateTimeTo\": \"%s\"}", minDate, maxDate);
+        List<Status> searchStatus = new ArrayList<>();
+        searchStatus.add(Status.COMPLETE);
+
+        SearchShipmentsPayload ssp = new SearchShipmentsPayload();
+        ssp.setStatus(searchStatus);
+        ssp.setCompletedDateTimeFrom(minDate);
+        ssp.setCompletedDateTimeTo(maxDate);
+        String postBody = objectMapper.writeValueAsString(ssp);
 
         try {
             int currentPage = 0;
@@ -239,6 +244,10 @@ public class ShipmentsService {
             if (response.getStatusLine().getStatusCode() == 200) {
                 return IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
             } else {
+                logger.warning("Failed : HTTP error code : " +
+                                response.getStatusLine().getStatusCode() +
+                                "with text: " +
+                                response.getStatusLine().getReasonPhrase());
                 throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
             }
         } finally {
@@ -258,6 +267,10 @@ public class ShipmentsService {
             } else if (response.getStatusLine().getStatusCode() == 503) {
                 return get_retry(url);
             } else {
+                logger.warning("Failed : HTTP error code : " +
+                        response.getStatusLine().getStatusCode() +
+                        "with text: " +
+                        response.getStatusLine().getReasonPhrase());
                 throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
             }
         } finally {
