@@ -265,6 +265,7 @@ public class ShipmentsService {
                 return IOUtils.toString((response.getEntity().getContent()), StandardCharsets.UTF_8);
                 // doing this for rate limiting
             } else if (response.getStatusLine().getStatusCode() == 503) {
+                logger.info("am being rate limited waiting a minute to try again");
                 return get_retry(url);
             } else {
                 logger.warning("Failed : HTTP error code : " +
@@ -280,7 +281,6 @@ public class ShipmentsService {
 
     private String get_retry(String url) throws IOException {
         try {
-            logger.info("am being rate limited waiting a minute to try again");
             TimeUnit.MINUTES.sleep(1);
             String responseText = get(url);
             return responseText;
