@@ -1,148 +1,173 @@
 package com.cargo_signal.bi.service.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Shipment {
-  private String shipmentNumber;
-  private String referenceNumber;
-  private String customer;
-  private List<String> serviceProvider;
-  private String origin;
-  private String destination;
-  private String mode;
-  private String status;
-  private String serviceType;
-  private String scheduledPickupTime;
-  private Location pickupLocation;
-  private String scheduledDeliveryTime;
-  private Location deliveryLocation;
-  private Location lastKnownLocation;
-  private Integer activeAlertCount;
-  private List<Reference> references;
-  private String shipmentCompletedDateTime;
-  private String shipmentId;
+    private String shipmentNumber;
+    private String referenceNumber;
+    private String customerId;
+    private String shipperId;
+    private String serviceProviderId;
+    private String customerName;
+    private List<String> serviceProvider;
+    private String origin;
+    private String destination;
+    private String mode;
+    private String status;
+    private String serviceLevel;
+    private String scheduledPickupDateTime;
+    private Location pickupLocation;
+    private String scheduledDeliveryDateTime;
+    private Location deliveryLocation;
+    private Location lastKnownLocation;
+    private Integer activeAlertCount;
+    private List<Reference> references;
+    private String shipmentCompletedDateTime;
+    private String shipmentId;
+    private String trackingNumber;
 
-  public String getShipmentNumber() {
-    return shipmentNumber;
-  }
+    public String getShipmentNumber() {
+        return shipmentNumber;
+    }
 
-  public String getReferenceNumber() {
-    return referenceNumber;
-  }
+    public String getReferenceNumber() {
+        return referenceNumber;
+    }
 
-  public String getCustomer() {
-    return customer;
-  }
+    public String getCustomerName() {
+        return customerName;
+    }
 
-  public List<String> getServiceProvider() {
-    return serviceProvider;
-  }
+    public List<String> getServiceProvider() {
+        return serviceProvider;
+    }
 
-  public String getOrigin() {
-    return origin;
-  }
+    public String getOrigin() {
+        return origin;
+    }
 
-  public String getDestination() {
-    return destination;
-  }
+    public String getDestination() {
+        return destination;
+    }
 
-  public String getMode() {
-    return mode;
-  }
+    public String getMode() {
+        return mode;
+    }
 
-  public String getStatus() {
-    return status;
-  }
+    public String getStatus() {
+        return status;
+    }
 
-  public String getServiceType() {
-    return serviceType;
-  }
+    public String getServiceLevel() {
+        return serviceLevel;
+    }
 
-  public String getScheduledPickupTime() {
-    return scheduledPickupTime;
-  }
+    public String getScheduledPickupDateTime() {
+        return scheduledPickupDateTime;
+    }
 
-  public Location getPickupLocation() {
-    return pickupLocation;
-  }
+    public Location getPickupLocation() {
+        return pickupLocation;
+    }
 
-  public String getScheduledDeliveryTime() {
-    return scheduledDeliveryTime;
-  }
+    public String getScheduledDeliveryDateTime() {
+        return scheduledDeliveryDateTime;
+    }
 
-  public Location getDeliveryLocation() {
-    return deliveryLocation;
-  }
+    public Location getDeliveryLocation() {
+        return deliveryLocation;
+    }
 
-  public Location getLastKnownLocation() {
-    return lastKnownLocation;
-  }
+    public Location getLastKnownLocation() {
+        return lastKnownLocation;
+    }
 
-  public List<Reference> getReferences() {
-    return references;
-  }
+    public List<Reference> getReferences() {
+        return references;
+    }
 
-  public String getShipmentCompletedDateTime() {
-    return shipmentCompletedDateTime;
-  }
+    public String getShipmentCompletedDateTime() {
+        return shipmentCompletedDateTime;
+    }
 
-  public String getShipmentId() {
-    return shipmentId;
-  }
+    public String getShipmentId() {
+        return shipmentId;
+    }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
 
-    if (o == null || getClass() != o.getClass()) return false;
+    public String getCustomerId() {
+        return customerId;
+    }
 
-    Shipment shipment = (Shipment) o;
+    public String getShipperId() {
+        return shipperId;
+    }
 
-    return new EqualsBuilder()
-        .append(shipmentNumber, shipment.shipmentNumber)
-        .append(referenceNumber, shipment.referenceNumber)
-        .append(customer, shipment.customer)
-        .append(serviceProvider, shipment.serviceProvider)
-        .append(origin, shipment.origin)
-        .append(destination, shipment.destination)
-        .append(mode, shipment.mode)
-        .append(status, shipment.status)
-        .append(serviceType, shipment.serviceType)
-        .append(scheduledPickupTime, shipment.scheduledPickupTime)
-        .append(pickupLocation, shipment.pickupLocation)
-        .append(scheduledDeliveryTime, shipment.scheduledDeliveryTime)
-        .append(deliveryLocation, shipment.deliveryLocation)
-        .append(lastKnownLocation, shipment.lastKnownLocation)
-        .append(references, shipment.references)
-        .append(shipmentCompletedDateTime, shipment.shipmentCompletedDateTime)
-        .append(shipmentId, shipment.shipmentId)
-        .isEquals();
-  }
+    public String getServiceProviderId() {
+        return serviceProviderId;
+    }
 
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-        .append(shipmentNumber)
-        .append(referenceNumber)
-        .append(customer)
-        .append(serviceProvider)
-        .append(origin)
-        .append(destination)
-        .append(mode)
-        .append(status)
-        .append(serviceType)
-        .append(scheduledPickupTime)
-        .append(pickupLocation)
-        .append(scheduledDeliveryTime)
-        .append(deliveryLocation)
-        .append(lastKnownLocation)
-        .append(references)
-        .append(shipmentCompletedDateTime)
-        .append(shipmentId)
-        .toHashCode();
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Shipment shipment = (Shipment) o;
+
+        return new EqualsBuilder()
+                .append(shipmentNumber, shipment.shipmentNumber)
+                .append(referenceNumber, shipment.referenceNumber)
+                .append(customerName, shipment.customerName)
+                .append(serviceProvider, shipment.serviceProvider)
+                .append(origin, shipment.origin)
+                .append(destination, shipment.destination)
+                .append(mode, shipment.mode)
+                .append(status, shipment.status)
+                .append(serviceLevel, shipment.serviceLevel)
+                .append(scheduledPickupDateTime, shipment.scheduledPickupDateTime)
+                .append(pickupLocation, shipment.pickupLocation)
+                .append(scheduledDeliveryDateTime, shipment.scheduledDeliveryDateTime)
+                .append(getDeliveryLocation(), shipment.getDeliveryLocation())
+                .append(lastKnownLocation, shipment.lastKnownLocation)
+                .append(references, shipment.references)
+                .append(shipmentCompletedDateTime, shipment.shipmentCompletedDateTime)
+                .append(shipmentId, shipment.shipmentId)
+                .append(trackingNumber, shipment.trackingNumber)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(shipmentNumber)
+                .append(referenceNumber)
+                .append(customerName)
+                .append(serviceProvider)
+                .append(origin)
+                .append(destination)
+                .append(mode)
+                .append(status)
+                .append(serviceLevel)
+                .append(scheduledPickupDateTime)
+                .append(pickupLocation)
+                .append(scheduledDeliveryDateTime)
+                .append(deliveryLocation)
+                .append(lastKnownLocation)
+                .append(references)
+                .append(shipmentCompletedDateTime)
+                .append(shipmentId)
+                .append(trackingNumber)
+                .toHashCode();
+    }
+
 }
