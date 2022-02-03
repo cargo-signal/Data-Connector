@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -136,7 +137,7 @@ public class ShipmentsService {
     }
 
 
-    private List<DeviceTelemetry> getDeviceTelemetries(List<Shipment> shipments) {
+    private List<DeviceTelemetry> getDeviceTelemetries(List<Shipment> shipments) throws InterruptedException {
         List<DeviceTelemetry> telemetries = new ArrayList<>();
         for (Shipment shipment : shipments) {
             String trackingNumber = shipment.getTrackingNumber();
@@ -177,7 +178,7 @@ public class ShipmentsService {
      * Performs a GET for each shipment ID in the shipments list
      * If a problem with a particular shipment, will log the problem and move on to the next shipment.
      */
-    private List<ShipmentAlert> getShipmentAlerts(List<Shipment> shipments) {
+    private List<ShipmentAlert> getShipmentAlerts(List<Shipment> shipments) throws InterruptedException {
         List<ShipmentAlert> shipmentAlerts = new ArrayList<>();
         for (Shipment shipment : shipments) {
             String trackingNumber = shipment.getTrackingNumber();
@@ -255,37 +256,31 @@ public class ShipmentsService {
         }
     }
 
-    private String get(String url) throws IOException {
+    private String get(String url) throws IOException,InterruptedException {
         HttpGet getRequest = new HttpGet(url);
         getRequest.addHeader(HttpHeaders.ACCEPT, "application/json");
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken);
-        try {
-            HttpResponse response = httpClient.execute(getRequest);
-            if (response.getStatusLine().getStatusCode() == 200) {
-                return IOUtils.toString((response.getEntity().getContent()), StandardCharsets.UTF_8);
-                // doing this for rate limiting
-            } else if (response.getStatusLine().getStatusCode() == 503) {
-                logger.info("am being rate limited waiting a minute to try again");
-                return get_retry(url);
-            } else {
-                logger.warning("Failed : HTTP error code : " +
-                        response.getStatusLine().getStatusCode() +
-                        "with text: " +
-                        response.getStatusLine().getReasonPhrase());
-                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
-            }
-        } finally {
-            getRequest.releaseConnection();
-        }
-    }
 
-    private String get_retry(String url) throws IOException {
         try {
-            TimeUnit.MINUTES.sleep(1);
-            String responseText = get(url);
-            return responseText;
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Interupted");
+            for (int i =0; i < 5; i++) {
+                HttpResponse response = httpClient.execute(getRequest);
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    return IOUtils.toString((response.getEntity().getContent()), StandardCharsets.UTF_8);
+                    // doing this for rate limiting
+                } else if (response.getStatusLine().getStatusCode() == 503) {
+                    logger.info("am being rate limited waiting a minute to try again");
+                    TimeUnit.MINUTES.sleep(1);
+                } else {
+                    logger.warning("Failed : HTTP error code : " +
+                            response.getStatusLine().getStatusCode() +
+                            "with text: " +
+                            response.getStatusLine().getReasonPhrase());
+                    throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+                }
+            }
+            throw new RemoteException("Failed : HTTP error code : 503, got rate limited to many times");
+        }finally {
+            getRequest.releaseConnection();
         }
     }
 
