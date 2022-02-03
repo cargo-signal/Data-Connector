@@ -1,4 +1,3 @@
-
 ![Cargo Signal Logo](logo-cargo-signal.png)
 
 <h1 align="center">Cargo Signal BI Data Connector</h1>
@@ -26,14 +25,13 @@ Open Source Connector for Cargo Signal Business Intelligence
 
 <h2><a href="#id3">3&nbsp;&nbsp;&nbsp;How Does It Work</a></h2>
 
-The figure below illustrates the end-to-end architecture of the BI integration solution.  At the core of the system,
-the Cargo Signal public API provides access to shipment, telemetry and alert data.  The Data Connector can be built and run
-as an Azure function or modified to run as a stand alone application.  If run as an Azure function, the connector will
-pull new data for completed shipments from CargoSignal once per day, or on another specified interval. The Data Connector
-deposits data returned from the API into Azure blob storage csollections.  Once stored in blog storage, the data can be
-access and analyized with PowerBI.
+The figure below illustrates the end-to-end architecture of the BI integration solution. At the core of the system, the Cargo Signal public API provides
+access to shipment, telemetry and alert data. The Data Connector can be built and run as an Azure function or modified to run as a stand alone application.
+If run as an Azure function, the connector will pull new data for completed shipments from CargoSignal once per day, or on another specified interval. The
+Data Connector deposits data returned from the API into Azure blob storage csollections. Once stored in blog storage, the data can be access and analyized
+with PowerBI.
 
-  ![Architecture](architecture.png)
+![Architecture](architecture.png)
 
 <h2><a href="#id4">4&nbsp;&nbsp;&nbsp;Usage</a></h2>
   <p>The Data Connector exposes two HTTP endpoints along with a scheduled timer:</p>
@@ -43,12 +41,14 @@ access and analyized with PowerBI.
 ```http
 GET https://YOUR_DOMAIN.com/health
 ```
+
   <p>Shipments (via HTTP)</p>
   <p>The shipments endpoint is an HTTP endpoint that will retrieve shipments, telemetry data for the shipments and alert data for the shipments.</p>
 
 ```http
 GET https://YOUR_DOMAIN.com/shipments
 ```
+
   <p>Shipments (via Timer)</p>
   <p>The shipments timer-invoked function returns the same data as the Shipments HTTP function.  By default it is configured to execute once per day and retrieve data from the last day.  The frequency of its execution can be modified by changing the Data Connector code to use a different date.</p>
 
@@ -62,6 +62,7 @@ GET https://YOUR_DOMAIN.com/shipments
 <h2><a href="#id6">6&nbsp;&nbsp;&nbsp;Build and Execute Data Connector</a></h2>
 <p>To build, run "mvn clean package" from the command line.</p>
 <p>To execute, run "mvn azure-functions:run" from the command line. </p>
+<p>To get this to run you will need to set the environment variables that are listed in the deployment section.</p>
 
 <h2><a href="#id7">7&nbsp;&nbsp;&nbsp;Deployment</a></h2>
 <p>Deployment can be achieved via scripts (e.g. PowerShell), CI/CD pipelines or from Visual Studio Code or IntelliJ.</p>
@@ -69,13 +70,16 @@ GET https://YOUR_DOMAIN.com/shipments
 <p>For deployment from JetBrains IntelliJ, see the <a href="https://blog.jetbrains.com/dotnet/2019/05/09/building-azure-functions-sql-database-improvements-azure-toolkit-rider-2019-1/">blog</a> from JetBrains.</p>
 <p>The Data Connector relies on a set of Azure application settings for its Azure Functions to operate properly.  Application settings you will need to provide in the Azure portal or via deployment tools are:</p>
 <ul>
-  <li>BEARER_TOKEN - the token used to access Cargo Signal APIs</li>
   <li>BI_CONNECTOR_CONNECTION_STRING - the connection string to your Azure Blob Storage</li>
   <li>HOST - the Cargo Signal public API endpoint</li>
   <li>SHIPMENTS_PATH - Path to the Shipments endpoint (located in local.settings.json for reference)</li>
   <li>SHIPMENT_TELEMETRY_PATH - Path to the Shipment Telemetry endpoint (located in local.settings.json for reference)</li>
   <li>SHIPMENT_ALERTS_PATH - Path to the Shipment Alerts endpoint (located in local.settings.json for reference)</li>
   <li>WEBSITE_TIME_ZONE - (Optional) The time zone for the CRON expression on the timer trigger.  Makes it easy to write the expression in local time rather than calculate UTC</li>
+  <li>AUTHORIZATION_URL - URL of where to get the bearer token</li>  
+  <li>AUDIENCE - the url you are going to authenticate for</li>
+  <li>CLIENT_ID - the client id you were given to access Cargo Signal APIs</li>
+  <li>CLIENT_SECRET - the client secret you were given to access Cargo Signal APIs</li>
 </ul>
 
 <h2><a href="#id8">8&nbsp;&nbsp;&nbsp;Tips</a></h2>
@@ -94,7 +98,6 @@ GET https://YOUR_DOMAIN.com/shipments
   <li>In local.settings.json, the AzureWebJobStorage field can be set "UseDevelopmentStorage=true" on Windows if you have the Azure Emulator running; otherwise don't set it to this or the timer trigger will get a Connection Refused error.</li>
 </ul>
 
-
 ## Usage
 
 The Data Connector calls three Cargo Signal APIs that are defined in the Cargo Signal Public API:
@@ -106,12 +109,13 @@ The Data Connector calls three Cargo Signal APIs that are defined in the Cargo S
 </ul>
 
 ## Cargo Signal Public API
-The Data Connector relies on the Cargo Signal public API to retreive shipment, telemetry and alert data from the Cargo Signal system.  The public API is documented at https://api.cargosignal.com.  A valid access key (bearer token) is required
-to access the API and use the Data Connector.  The data connector utilizes the following three APIs:
+
+The Data Connector relies on the Cargo Signal public API to retreive shipment, telemetry and alert data from the Cargo Signal system. The public API is
+documented at https://api.cargosignal.com. A valid access key (bearer token) is required to access the API and use the Data Connector. The data connector
+utilizes the following three APIs:
 
 * [Get shipments](https://api.cargosignal.com/docs/index.html#resources-shipment-documentation-get-shipments)
 * GET /alerts - coming soon
 * [Get telemetry data](https://api.cargosignal.com/docs/index.html#resources-shipment-documentation-get-telemetry-data)
-
 
 &copy; 2020 Cargo Signal
