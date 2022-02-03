@@ -62,9 +62,6 @@ public class ShipmentsService {
 
     private String bearerToken;
 
-    // All possible status values
-    // private final List<String> statusValues = Arrays.asList("Draft", "Future", "Current", "Invalid", "Complete", "Canceled", "Deleted");
-
     public ShipmentsService(ExecutionContext context) throws Exception {
         blobManager = new BlobStorageManager(context);
         logger = context.getLogger();
