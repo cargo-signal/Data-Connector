@@ -232,25 +232,35 @@ public class ShipmentsService {
         }
     }
 
-    private String post(String url, String payload) throws IOException {
+    private String post(String url, String payload) throws IOException, InterruptedException {
         HttpPost post = new HttpPost(url);
         post.addHeader("Content-type", "application/json");
         post.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken);
 
         try {
-            StringEntity postBody = new StringEntity(payload);
-            post.setEntity(postBody);
+            for (int i =0; i < 5; i++) {
+                StringEntity postBody = new StringEntity(payload);
+                post.setEntity(postBody);
 
-            HttpResponse response = httpClient.execute(post);
-            if (response.getStatusLine().getStatusCode() == 200) {
-                return IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
-            } else {
-                logger.warning("Failed : HTTP error code : " +
-                                response.getStatusLine().getStatusCode() +
-                                "with text: " +
-                                response.getStatusLine().getReasonPhrase());
-                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+                HttpResponse response = httpClient.execute(post);
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    return IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+
+                } else if (response.getStatusLine().getStatusCode() == 503) {
+                    logger.info("am being rate limited waiting a minute to try again");
+                    post.releaseConnection();  //have to release connection or we will hang
+                    TimeUnit.MINUTES.sleep(1);
+                    logger.info("Waited a minute, going to try again");
+                }
+                else {
+                    logger.warning("Failed : HTTP error code : " +
+                            response.getStatusLine().getStatusCode() +
+                            "with text: " +
+                            response.getStatusLine().getReasonPhrase());
+                    throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+                }
             }
+            throw new RuntimeException("Failed : HTTP error code : 503, got rate limited to many times");
         } finally {
             post.releaseConnection();
         }
