@@ -262,6 +262,7 @@ public class ShipmentsService {
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken);
 
         try {
+            // this is for some retry logic if we are getting 503s, that will mean that we are being rate limited
             for (int i =0; i < 5; i++) {
                 HttpResponse response = httpClient.execute(getRequest);
                 if (response.getStatusLine().getStatusCode() == 200) {
@@ -269,7 +270,9 @@ public class ShipmentsService {
                     // doing this for rate limiting
                 } else if (response.getStatusLine().getStatusCode() == 503) {
                     logger.info("am being rate limited waiting a minute to try again");
+                    getRequest.releaseConnection();  //have to release connection or we will hang
                     TimeUnit.MINUTES.sleep(1);
+                    logger.info("Waited a minute, going to try again");
                 } else {
                     logger.warning("Failed : HTTP error code : " +
                             response.getStatusLine().getStatusCode() +
@@ -278,7 +281,7 @@ public class ShipmentsService {
                     throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
                 }
             }
-            throw new RemoteException("Failed : HTTP error code : 503, got rate limited to many times");
+            throw new RuntimeException("Failed : HTTP error code : 503, got rate limited to many times");
         }finally {
             getRequest.releaseConnection();
         }
