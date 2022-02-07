@@ -10,15 +10,12 @@ import lombok.Getter;
 public class ShipmentAlert {
     private String alertItemIdentifier;
     private String shipmentIdentifier;
-    private String deviceId;
-    private String deviceNumber;
     private String alertStatus;
-    private String severity;
     private String trackingNumber;
     private String triggerValue;
     private String triggerCriteria;
     private String alertName;
-    private String triggerDatetime;
+    private String triggeredDatetime;
     private String address;
     private String waypointType;
     private String geofenceName;
