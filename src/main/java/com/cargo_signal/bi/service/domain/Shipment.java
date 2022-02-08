@@ -11,26 +11,22 @@ import lombok.Getter;
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Shipment {
-    private String shipmentNumber;
-    private String referenceNumber;
     private String customerId;
     private String shipperId;
     private String serviceProviderId;
+    private String consigneeId;
     private String customerName;
-    private List<String> serviceProvider;
     private String origin;
     private String destination;
     private String mode;
     private String status;
-    private String serviceLevel;
+    private String serviceType;
     private String scheduledPickupDateTime;
     private Location pickupLocation;
     private String scheduledDeliveryDateTime;
     private Location deliveryLocation;
     private Location lastKnownLocation;
-    private Integer activeAlertCount;
     private List<Reference> references;
     private String shipmentCompletedDateTime;
-    private String shipmentId;
     private String trackingNumber;
 }

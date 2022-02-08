@@ -10,7 +10,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceTelemetry {
-    private String deviceId;
     private String trackingNumber;
     private String deviceNumber;
     private String sensorTimestamp;

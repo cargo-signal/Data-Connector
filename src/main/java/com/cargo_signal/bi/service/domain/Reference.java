@@ -11,6 +11,6 @@ import lombok.Getter;
 public class Reference {
   private String referenceId;
   private String type;
-  private String value;
+  private String reference;
   private String parentId;
 }
