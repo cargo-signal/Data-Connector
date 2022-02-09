@@ -188,6 +188,8 @@ public class ShipmentsService {
                     List<ShipmentAlert> sa = objectMapper.readValue(shipmentsAlerts, new TypeReference<List<ShipmentAlert>>() {
                     });
                     shipmentAlerts.addAll(sa);
+                    // once we add the customerId back in the alert object this will be removed.
+                    shipmentAlerts.forEach((a) -> a.setCustomerIdentifier(customerId));
                 } catch (JsonProcessingException e) {
                     logger.warning(String.format(parseErrorMessage, "alerts", trackingNumber, e));
                 } catch (UnsupportedEncodingException e) {

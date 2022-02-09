@@ -3,8 +3,10 @@ package com.cargo_signal.bi.service.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ShipmentAlert {
@@ -25,4 +27,5 @@ public class ShipmentAlert {
     private String resolvedDateTime;
     private String sourceIdentifier;
     private String pointOfInterestName;
+    private String customerIdentifier;
 }
