@@ -3,12 +3,14 @@
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "java",
     "HOST": "https://api.cargosignal.com",
-    "SHIPMENTS_PATH": "/v3/shipments?status=Complete&from=%s&to=%s",
-    "SHIPMENT_ALERTS_PATH": "/v3/shipment/%s/alerts",
-    "SHIPMENT_TELEMETRY_PATH": "/v3/shipment/%s/telemetry",
-    "BEARER_TOKEN": "INSERT TOKEN HERE",
+    "SHIPMENTS_PATH": "/v4/shipments/search?size=50&page=%s",
+    "SHIPMENT_ALERTS_PATH": "/v4/alerts?trackingNumber=%s&customerId=%s",
+    "SHIPMENT_TELEMETRY_PATH": "/v4/shipments/telemetry?trackingNumber=%s&customerId=%s&size=50&page=%s",
     "BI_CONNECTOR_CONNECTION_STRING": "INSERT Storage Account Access Key 1",
-    "AzureWebJobsStorage": "INSERT Storage Account Access Key 1",
-    "WEBSITE_TIME_ZONE": "America/Los_Angeles"
+    "WEBSITE_TIME_ZONE": "America/Los_Angeles",
+    "AUDIENCE":  "https://app.cargosignal.com",
+    "AUTHORIZATION_URL": "https://auth.cargosignal.com/oauth/token",
+    "CLIENT_ID": "INSERT CLIENT ID",
+    "CLIENT_SECRET": "INSERT CLIENT SECRET"
   }
 }
