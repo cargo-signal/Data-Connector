@@ -54,7 +54,8 @@ public class ConnectorTest {
     @Test
     public void testShipments() throws Exception {
         // Arrange
-        @SuppressWarnings("unchecked") final String MinimumDate = "2020-08-27";
+        // @SuppressWarnings("unchecked") final String MinimumDate = "2020-08-27";
+        @SuppressWarnings("unchecked") final String MinimumDate = "2022-01-30";
         final HttpRequestMessage<Optional<String>> req = mock(HttpRequestMessage.class);
 
         final Map<String, String> queryParams = new HashMap<>();
